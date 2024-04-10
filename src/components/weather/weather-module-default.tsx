@@ -11,10 +11,10 @@ import WeatherModuleSelectDay from "./weather-module-select-day";
 
 const WeatherModuleDefault = () => {
   const [country, setCountry] = useState<string>("");
-  const city = useDebounce(country, 700, async () => {});
+  const city = useDebounce(country, 1000, async () => {});
   const [unit, setUnit] = useState<string>("metric");
-  const [weatherData, setWeatherData] = useState<IWeather>();
-  const [location, setLocation] = useState<ILocation>();
+  const [weatherData, setWeatherData] = useState<IWeather | null>();
+  const [location, setLocation] = useState<ILocation | null>();
   const [selectedDate, setSelectedDate] = useState<number>();
 
   const handleDateSelection = (date: number) => {
@@ -36,6 +36,9 @@ const WeatherModuleDefault = () => {
         } catch (error) {
           console.error("Error fetching data:", error);
         }
+      } else {
+        setWeatherData(null);
+        setLocation(null);
       }
     };
 
@@ -47,7 +50,7 @@ const WeatherModuleDefault = () => {
       <SearchInput country={country} setCountry={setCountry} />
 
       <div className="border rounded">
-        {city ? (
+        {city && weatherData ? (
           <>
             {weatherData && location ? (
               <>
